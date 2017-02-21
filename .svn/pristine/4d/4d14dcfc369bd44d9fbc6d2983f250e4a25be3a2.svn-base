@@ -1,0 +1,30 @@
+#coding=GBK  
+import requests
+import unittest
+import json
+import os
+import numbers
+import os,urllib2,urllib
+from config.reponse import response
+from utils.api_tools import *
+from check.api.special_points import *
+class testApk_idDownload(unittest.TestCase):
+
+        
+#µ⁄“ª¥Œ≤‚ ‘   10.110.1.55:8081/1.0/cat/list/cat/list
+    def test1_cat_list_api(self):   
+             
+        cat_listId=get_category_id_list()
+        list_app_id,list_apk_id,list_icon_id,list_screen_id =get_app_apk_id_icon_id_screen_id(cat_listId)
+        
+        digest,size,mime_type,file_suffix=check_jData_digest_size_mime_type_file_suffix(list_apk_id)
+         
+         
+        fileSizelist,sizelist=file_download(list_apk_id)
+        self.assertEqual(fileSizelist,sizelist)
+                    
+                          
+                  
+        
+if __name__ == '__main__':
+    unittest.main()   

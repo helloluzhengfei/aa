@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+#@author 陆正飞
+#web与api共同 的部分检测逻辑代码
+def check_common_points(jData,b,i):
+    cat_listName_api=[]
+    cat_listSeq_num_api=[]
+#     cat_listName_excel=[]
+#     cat_listSeq_num_excel=[]
+    for jCat in jData:
+            cat_listName_api.append(jCat["name"])
+            cat_listSeq_num_api.append(jCat['seq_num']) 
+            
+    
+    if b[i]['catName'] in cat_listName_api:
+        return True 
+    else:
+        return False
+        
+#   print "bbbbb"    
+    
+    if b[i]['catSeqNum'] in cat_listSeq_num_api:
+        return True 
+    else:
+        return False
+#    print "aaaa"
+#    return True    
+#         cat_listName_excel.append(a['catName']) 
+#         cat_listSeq_num_excel.append(a['catSeqNum'])
+#         
+#     print cat_listName_excel
+#     print cat_listSeq_num_excel
+        
+            
+#             if (a==long):
+#                 continue
+#             else:
+#                 return False
+#                 break
+#     return True

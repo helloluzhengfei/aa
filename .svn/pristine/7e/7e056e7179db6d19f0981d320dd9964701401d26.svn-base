@@ -1,0 +1,32 @@
+# coding=utf-8
+
+from selenium import webdriver
+import unittest
+from utils.readexcel import readexcel
+from utils.file_dir import FileDir
+from check_items.api.testCatlist import testCatlist
+
+from utils.app_category_page import AppCategory
+from check_items.web.check_app_category_add_item import check_app_category_add_item
+
+class TestAppCategory(AppCategory):
+    def test_web_app_cat_add(self):
+        dir_obj = FileDir()
+        driver = self.driver
+        
+        excel_info = readexcel()
+        cat_name = excel_info[0].get('catName')
+        category_name = excel_info[0].get('catList')
+        category_order = int (excel_info[0].get('catSeqNum'))
+        file_url = dir_obj.base_dir +'\\' + excel_info[0].get('catImgPath')
+        print file_url
+        
+        result = check_app_category_add_item(driver,cat_name,category_name,category_order,file_url)
+        self.assertTrue(result)
+        
+        if(result):
+            suite = unittest.TestLoader().loadTestsFromTestCase(testCatlist)
+            unittest.TextTestRunner(verbosity=2).run(suite)
+    
+if __name__ == '__main__':
+    unittest.main()

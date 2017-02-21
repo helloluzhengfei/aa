@@ -1,0 +1,52 @@
+#coding=utf-8
+#@author 陆正飞
+#业务代码 check
+import unittest
+from check.api.sqe_name_points import *
+from config.reponse import response
+from utils.readexcel import readexcel
+from check.api.special_points import *
+from utils.api_tools import *
+class testCatlist(unittest.TestCase):
+    def test1_cat_list_api(self):
+        response_obj = response().response_catlist_url()       
+        bln1=status_code(response_obj.status_code)  
+        self.assertTrue(bln1)                   
+        bln2=result_code(response_obj)
+        self.assertTrue(bln2)       
+        jResp = response_obj.json()        
+        bln3=limit_total(response_obj)
+        self.assertTrue(bln3)
+        
+        jData = jResp["data"]        
+        cat_listName, cat_listMime_type=check_jData_name_mime_type(jData)#检查name，mime_type，通过打印显示不为空 
+        cat_listName_done=byteify(cat_listName)
+        log("WARNING", "Name: %s" % cat_listName_done,'catlistt.log' )   
+     
+        cat_listMime_type_done=byteify(cat_listMime_type)  
+        
+        log("DEBUG", "mime_type: %s" % cat_listMime_type_done,'catlistt.log')
+        
+        
+        bln4=file_size(jData)
+        self.assertTrue(bln4)
+        bln5=create_date(jData)
+        self.assertTrue(bln5)
+        bln6=mod_date_is_num(jData)
+        self.assertTrue(bln6)        
+#         bln10=parentid_rm(jData)
+#         assert bln10        
+        cat_listSeq_num=get_seq_num_list(jData) 
+        bln7=Seq_num_in(cat_listSeq_num)  #判断Seq_num是否在0-200内
+        self.assertTrue(bln7)        
+        cat_listId=cat_listId_list(jData)
+              
+        list_limit = jResp['limit']
+        bln8=cat_listId_len(cat_listId,list_limit)
+        self.assertTrue(bln8)
+
+        print u'第一次检查完美结束'
+
+if __name__ == '__main__':
+    unittest.main()       
+    

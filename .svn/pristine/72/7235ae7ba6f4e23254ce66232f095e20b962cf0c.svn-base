@@ -1,0 +1,108 @@
+# coding=utf-8
+
+from time import sleep
+
+from utils.urls import AppStoreUrl
+from utils.text_check import is_other
+from utils.text_check import is_text_len
+from utils.text_check import is_number
+
+           
+def check_select_parent_category(driver, cat_name):
+    driver.current_window_handle 
+    parent_categories = driver.find_element_by_id("parent").find_elements_by_tag_name("option")
+    parent_category_text = []
+    
+    for parent_category in parent_categories:            
+        parent_category_text.append(parent_category.text)
+        if(cat_name == parent_category.text):
+            parent_category.click()
+            rst = True
+            break
+        else:
+            rst = False        
+        print(parent_category.text)
+    return rst
+      
+def check_category_name(driver, category_name):  
+    driver.find_element_by_id('catName').clear()
+    driver.find_element_by_id('catName').send_keys(category_name)
+    for chrct in category_name:
+        if ((not is_other(chrct)) and is_text_len(chrct, 20)):
+            rst = True
+        else:
+            rst = False
+        return rst 
+    
+def check_category_order(driver, category_order):
+    driver.find_element_by_id('seqNum').clear()
+    driver.find_element_by_id('seqNum').send_keys(category_order)
+    return is_number(category_order)
+
+def check_select_file(driver, file_url):
+    driver.find_element_by_id('catImgFile').send_keys(file_url)
+    if(file_url.endswith('.jpg') or file_url.endswith('.png')):
+        rst = True
+    else:
+        rst = False
+    return rst
+
+def check_list_item_total(driver):    
+    #drop down list num items
+    driver.find_element_by_xpath('//*[@id="grid-data-header"]/div/div/div[2]/div[1]').click()
+    sleep(1)
+    driver.find_element_by_xpath('//*[@id="grid-data-header"]/div/div/div[2]/div[1]/ul/li[4]').click() 
+    sleep(1)
+    #Refresh
+    driver.find_element_by_xpath('//*[@id="grid-data-header"]/div/div/div[2]/button').click()
+    sleep(1)
+    driver.current_window_handle
+    list_items = driver.find_elements_by_xpath('//*[@id="grid-data"]/tbody/tr')
+    list_total = 0
+    for list_item in list_items:
+        list_total = list_total + 1
+    print("Total list items is %r"%list_total )
+    return list_total
+
+def check_save(driver , list_item_sub):
+    driver.current_window_handle    
+    url_obj = AppStoreUrl()    
+    if((url_obj.category_page_url == driver.current_url) & (list_item_sub == 1)):
+        rst = True
+    elif((url_obj.category_add_page_url == driver.current_url) & (list_item_sub == 0)):
+        rst = False
+    else:
+        rst = False
+    return rst
+
+def check_app_category_add_item(driver,cat_name,category_name,category_order,file_url):
+    list_item_total_before = check_list_item_total(driver)  
+    
+    driver.current_window_handle    
+    driver.find_element_by_link_text("添加分类").click()
+    
+    rst1 = check_select_parent_category(driver,category_name)
+    print('check_select_parent_category result is %r'%rst1)
+    rst2 = check_category_name(driver,cat_name)
+    print('check_category_name result is %r'%rst2)
+    rst3 = check_category_order(driver,category_order)
+    print('check_category_order result is %r'%rst3)
+    rst4 = check_select_file(driver,file_url)
+    print('check_select_file result is %r'%rst4)
+    
+    driver.find_element_by_id('savebtn').click()
+    sleep(1)
+    driver.current_window_handle 
+      
+    list_item_total_after = check_list_item_total(driver)   
+    list_item_sub = list_item_total_after - list_item_total_before
+    rst5 = check_save(driver,list_item_sub)
+    print('check_save result is %r'%rst5)
+    sleep(1)
+    
+    rests = [rst1, rst2, rst3, rst4, rst5]
+    result =True
+    for rst in rests:
+        result = result and rst
+        
+    return rst

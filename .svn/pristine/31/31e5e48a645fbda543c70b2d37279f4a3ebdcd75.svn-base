@@ -1,0 +1,42 @@
+#coding=GBK
+#@author 陆正飞
+#业务代码 check
+import unittest
+from check_points.api.special_points import *
+from config.reponse import response
+from utils.readexcel import readexcel
+from check_points.api.sqe_name_points import *
+from utils.api_tools import *
+class testCatlist(unittest.TestCase):
+    def test1_cat_list_api(self):
+        response_obj = response().response_catlist_url()       
+        bln1=status_code(response_obj.status_code)  
+        assert bln1                   
+        bln2=result_code(response_obj)
+        assert bln2        
+        jResp = response_obj.json()        
+        bln3=limit_total(response_obj)
+        assert bln3
+        jData = jResp["data"]
+        check_jData_name_mime_type(jData)#检查name，mime_type，通过打印显示不为空 
+        bln7=file_size(jData)
+        assert bln7
+        bln8=create_date(jData)
+        assert bln8
+        bln9=mod_date_is_num(jData)
+        assert bln9        
+        bln10=parentid_rm(jData)
+        assert bln10        
+        cat_listSeq_num=get_seq_num_list(jData) 
+        bln4=Seq_num_in(cat_listSeq_num)  #判断Seq_num是否在0-200内
+        assert bln4       
+        cat_listId=cat_listId_list(jData)
+        print cat_listId        
+        list_limit = jResp['limit']
+        bln5=cat_listId_len(cat_listId,list_limit)
+        assert bln5
+
+        print u'第一次检查完美结束'
+        
+        
+    

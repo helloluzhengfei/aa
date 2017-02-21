@@ -1,0 +1,92 @@
+#encoding=utf-8
+'''
+Created on 2017年2月8日
+
+@author: eric.chen
+
+Here we use unittest, you need to install it if not error information about 'unittest'
+Using:
+ pip install unittest
+
+'''
+import unittest
+from utils.load_config import load_config
+from data.api.weather.get_local_weather import WeatherInfoLocal
+from data.api.weather.get_thinkpage_weather import WeatherInfoThinkPage
+from check.api.weather.comparison import compareWeatherInstant
+
+
+class CompareResults(unittest.TestCase):
+
+
+    def setUp(self):
+        self.config_own, self.config_thinkpage = load_config('weather', 'dev')
+        self.city = self.config_own['city']
+        self.defaultLang = self.config_own['lang']
+        self.defaultUnit = self.config_own['unit']
+
+    def tearDown(self):
+        pass
+
+
+    def testWeatherInstant(self):
+        cities = self.city.split(',')
+        for city in cities:
+            print ">>>>>>>>>>>>Check Instant Weather of City: {0},".format(city)
+            localWeatherInstant = WeatherInfoLocal(self.config_own, city, self.defaultLang, self.defaultUnit)
+            thinkPageWeatherInstant = WeatherInfoThinkPage(self.config_thinkpage, city, self.defaultLang, self.defaultUnit)
+            
+            localRespJson = localWeatherInstant.get_weather_instant()            
+            thinkPageRespJson = thinkPageWeatherInstant.get_weather_instant()
+            
+            checkResult = compareWeatherInstant(localRespJson, thinkPageRespJson)
+            print "<<<<<<<<<Check Instant Weather of City: {0}, result={1}".format(city, checkResult)
+            self.assertTrue(checkResult)
+        
+
+    def testWeatherDaily(self):
+        pass
+
+    def testWeatherHourly(self):
+        pass
+
+    def testWeatherHourlyHistory(self):
+        pass
+
+    def testWeatherAlarm(self):
+        pass
+
+    def testAirQuality(self):
+        pass
+
+    def testAirQualityDaily(self):
+        pass
+
+    def testAirQualityHourly(self):
+        pass
+
+    def testAirQualityHourlyHistory(self):
+        pass
+    
+    def testLifeSuggestion(self):
+        pass
+
+    def testLifeChineseCalendar(self):
+        pass
+
+    def testLifeDrivingRestriction(self):
+        pass
+
+    def testGeoSun(self):
+        pass
+
+    def testGeoMoon(self):
+        pass
+
+    def testLocationSearch(self):
+        pass
+
+
+if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+    unittest.main()

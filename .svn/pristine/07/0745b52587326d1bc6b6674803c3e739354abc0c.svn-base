@@ -1,0 +1,55 @@
+import requests
+import unittest
+import json
+import os
+import numbers
+import os,urllib2,urllib
+from config.reponse import response
+from utils.api_tools import *
+from check.api.special_points import *
+from utils.readexcel import readexcel
+class testAppCommentsList(unittest.TestCase):
+
+    def test1_cat_list_api(self):
+        cat_listId=get_category_id_list()
+        list_app_id,list_apk_id,list_icon_id,list_screen_id =get_app_apk_id_icon_id_screen_id(cat_listId)
+        print list_app_id
+        for app_id in list_app_id:
+            excel_info = readexcel("app_comments_list")
+            print excel_info
+            for excel_row in range(0,excel_info.__len__()):
+                
+#                 print('test %r row in excel'%excel_row)         
+                #check web
+                pos_num = excel_info[excel_row].get('pos')
+                limit_num = excel_info[excel_row].get('limit') 
+                  
+                response_obj=response().response_comment_list(app_id,pos_num,limit_num)
+                bln1=status_code(response_obj.status_code)  
+                self.assertTrue(bln1)
+                bln2=result_code(response_obj)
+                self.assertTrue(bln2)
+                
+                jData=response_obj.json()["data"]
+                bln3=create_date(jData)
+                self.assertTrue(bln3) 
+                bln4=mod_date_is_num(jData)     
+                self.assertTrue(bln4)
+                show_msg_star_log(jData) 
+                
+                
+
+if __name__ == '__main__':
+    unittest.main() 
+
+
+
+        
+                
+
+      
+        
+        
+
+    
+        

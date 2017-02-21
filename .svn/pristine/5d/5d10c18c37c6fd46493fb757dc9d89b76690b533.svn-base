@@ -1,0 +1,35 @@
+# coding=utf-8
+
+from selenium import webdriver
+import unittest
+from time import sleep
+from utils.urls import AppStoreUrl
+
+class pages(unittest.TestCase):
+    def login_page(self):
+        url_obj = AppStoreUrl()
+        self.driver.get(url_obj.login_url)
+        self.driver.implicitly_wait(5)
+        self.driver.maximize_window()
+    def main_page(self):
+        self.driver.find_element_by_id("username").send_keys("admin")
+        self.driver.find_element_by_id("password").send_keys("123456")
+        self.driver.find_element_by_xpath("//input[@value='登录']").click()
+    def app_management_page(self):
+        sreach_window=self.driver.current_window_handle    
+        self.driver.find_element_by_link_text("应用管理").click()
+        sleep(1)
+    def wait_check_page(self):
+        sreach_window=self.driver.current_window_handle 
+        self.driver.find_element_by_link_text('待审核').click()
+        sleep(1)
+    def app_add_page(self):
+        sreach_window=self.driver.current_window_handle
+        self.driver.find_element_by_link_text('添加应用').click()
+        sleep(1)
+    def add_cat_page(self):
+        sreach_window=self.driver.current_window_handle    
+        self.driver.find_element_by_link_text("应用分类").click()
+        sleep(1) 
+  
+    

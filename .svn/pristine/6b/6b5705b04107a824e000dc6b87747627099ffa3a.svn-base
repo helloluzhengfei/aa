@@ -1,0 +1,16 @@
+# coding=utf-8
+
+from selenium import webdriver
+import unittest
+from pages import pages
+
+class AppCategory(pages):
+    
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.login_page()
+        self.main_page()
+        self.add_cat_page()
+        
+    def tearDown(self):
+        self.driver.quit()

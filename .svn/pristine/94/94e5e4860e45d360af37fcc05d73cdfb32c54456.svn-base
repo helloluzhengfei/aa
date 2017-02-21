@@ -1,0 +1,118 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+#@author 陆正飞
+#访问域名代码
+import requests
+import json
+class response():
+    def __init__(self):
+        self.base_url = 'http://10.110.1.55:8081/2.0/'
+        self.cat_list_uri = 'cat/list'
+        self.cat_app_uri = 'cat/app/'
+        self.file_prop_uri = 'file/'
+        self.dlwd_icon_uri = 'app/icon/cont/'
+        self.dlwd_screen_uri = 'app/screen/cont/'
+        self.dlwd_apk_uri = 'app/cont/'
+        self.comment_add_uri = 'app/c/' #  POST /app/c/{app_id}
+        self.comment_get_uri = 'app/screen/cont/' #GET app/c/list/{app_id}?pos={pos}&limit={limit}
+        self.get_commentlist_uri='app/c/list/'
+        self.update_url='app/update/query'
+        self.comment_url='app/recommend'
+        self.get_app_allinfo_uri='app/'
+        self.comment_url='app/find'
+        self.update_url='app/lastupdate'
+        
+    def response_catlist_url(self): 
+        catlist_url = self.base_url + self.cat_list_uri
+        catlist_response =requests.get(catlist_url)       
+        return catlist_response
+    
+    def response_catlist_url_jData(self): 
+        catlist_url = self.base_url + self.cat_list_uri
+        catlist_response =requests.get(catlist_url)
+        jResp = catlist_response.json()
+        jData = jResp["data"]
+        return jData
+     
+    def response_category_url(self,category_id):    
+        category_url = self.base_url + self.cat_app_uri+category_id   
+#         print     category_url   
+        app_response=requests.get(category_url)
+        return app_response
+    
+    def response_category_url_jData(self,category_id):
+        category_url = self.base_url + self.cat_app_uri+category_id
+        app_response=requests.get(category_url)
+        jResp = app_response.json()
+        jData = jResp["data"]
+        return jData
+    
+    def response_file_url(self,file_id):
+        file_url = self.base_url + self.file_prop_uri + file_id
+        file_response =requests.get(file_url)       
+        return file_response
+    
+    def response_download_apk(self,local_filename):
+        apk_url = self.base_url + self.dlwd_apk_uri + local_filename
+        apk_response =requests.get(apk_url)
+        return apk_response
+    
+    def response_discuss_comment(self,app_id,stars,msg):
+        discuss_comment_url=self.base_url + self.comment_add_uri + app_id
+        payload = {"stars":stars,"msg":msg}
+        discuss_commen_response = requests.post(discuss_comment_url, data=json.dumps(payload))
+        return discuss_commen_response
+    
+    def response_comment_list(self,app_id,pos_num,limit_num):
+        comment_list_url=self.base_url + self.get_commentlist_uri + app_id
+#         print comment_list_url
+#         print pos_num,limit_num
+#         
+        pos_num_int=int(pos_num)
+        limit_num_int=int(limit_num)
+#         print pos_num_int,limit_num_int
+        
+        payload = {"pos":pos_num_int,"limit":limit_num_int}
+        comment_list_response = requests.get(comment_list_url,params = payload)
+        return comment_list_response
+    
+    def response_appifupdate(self,i,package_name_list,version_code_list):
+        pqyload = {"query_param":[{"package_name":package_name_list[i],"version_code":version_code_list[i]}]}
+        appifupdate_url = self.base_url + self.update_url 
+        print appifupdate_url
+        print pqyload
+        appifupdate_response = requests.post(appifupdate_url,data = json.dumps(pqyload)) 
+        return appifupdate_response
+    
+    def response_recommend(self,pos_num,limit_num,orderByColumn_num):
+        pos_num_int=int(pos_num)
+        limit_num_int=int(limit_num)
+        orderByColumn_num_int=int(orderByColumn_num)
+        
+        pqyload = {'pos':pos_num_int,'limit':limit_num_int,'orderByColumn':orderByColumn_num_int}        
+        recommend_url = self.base_url + self.comment_url
+        recommend__response = requests.get(recommend_url,params = pqyload)
+        return   recommend__response
+    
+    def response_show_app(self,app_id):
+        show_app_url = self.base_url + self.get_app_allinfo_uri + app_id
+        print show_app_url
+        response = requests.get(show_app_url)
+        return response
+    def response_find_app(self,limit_num):
+        url = self.base_url + self.comment_url
+        print url
+        limit_num_int=int(limit_num)
+        pqyload = {'limit':limit_num_int}
+        response_obj = requests.get(url,params = pqyload)
+        return response_obj
+    
+    def response_lastupdata(self,pos_num,limit_num,orderByColumn_num):
+        pos_num_int=int(pos_num)
+        limit_num_int=int(limit_num)
+        orderByColumn_num_int=int(orderByColumn_num)
+        
+        pqyload = {'pos':pos_num_int,'limit':limit_num_int,'orderByColumn':orderByColumn_num_int}        
+        lastupdata_url = self.base_url + self.update_url
+        lastupdata__response = requests.get(lastupdata_url,params = pqyload)
+        return   lastupdata__response

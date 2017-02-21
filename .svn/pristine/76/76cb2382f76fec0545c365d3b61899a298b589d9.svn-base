@@ -1,0 +1,48 @@
+# coding=utf-8
+
+from selenium import webdriver
+import unittest
+from utils.readexcel import readexcel
+from utils.file_dir import FileDir
+from check_items.api.testCatlist import testCatlist
+from check_points.api.check_common_points import check_common_points
+from utils.app_category_page import AppCategory
+from check_items.web.check_app_category_add_item import check_app_category_add_item
+from config.reponse import response
+
+class TestAppCategory(AppCategory):
+    def test_web_app_cat_add(self):
+        dir_obj = FileDir()
+        driver = self.driver
+        
+        excel_info = readexcel()
+        cat_name = excel_info[0].get('catName')
+        category_name = excel_info[0].get('catList')
+        category_order = int (excel_info[0].get('catSeqNum'))
+        
+        
+        
+        file_url = dir_obj.base_dir +'\\' + excel_info[0].get('catImgPath')
+        print file_url
+        
+        result = check_app_category_add_item(driver,cat_name,category_name,category_order,file_url)
+        self.assertTrue(result)
+        
+        if(result):
+            
+            
+#           @陆正飞
+#          其中，i是遍历excel的行数，web与api需要对应
+         
+            
+            response_obj = response().response_catlist_url()
+            jResp = response_obj.json()
+            jData = jResp["data"]
+            b=readexcel() 
+            bln=check_common_points(jData,b,i)
+            
+            suite = unittest.TestLoader().loadTestsFromTestCase(testCatlist)
+            unittest.TextTestRunner(verbosity=2).run(suite)
+            
+if __name__ == '__main__':
+    unittest.main()

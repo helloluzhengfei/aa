@@ -1,0 +1,71 @@
+#coding=utf-8  
+import requests
+import unittest
+import json
+import os
+import numbers
+import os,urllib2,urllib
+from config.reponse import response
+from utils.api_tools import *
+from check.api.special_points import *
+from utils.readexcel import readexcel
+
+class testFindApp(unittest.TestCase):
+    def setUp(self):
+        self.base_url = 'http://10.110.1.55:8081/1.0/'
+        self.comment_url='app/find'
+
+    def test1_cat_list_api(self):
+        
+        excel_info = readexcel("find_app")
+        print excel_info
+        for excel_row in range(0,excel_info.__len__()):            
+            limit_num = excel_info[excel_row].get('limit')
+            
+            response_obj=response().response_find_app(limit_num)
+
+
+             
+            bln1=status_code(response_obj.status_code)  
+            assert bln1                   
+            bln2=result_code(response_obj)
+            assert bln2
+            
+            jResp = response_obj.json()
+                 
+            jData = jResp["data"]["recommends"]
+            jData1 = jResp["data"]["lastupdates"]
+        
+
+            check_jData_app_name_package_name_version_name_cat_app_permit_signature(jData,"showapp.log")#检查name，mime_type，通过打印显示不为空 
+            
+            bln3=create_date(jData)
+            assert bln3
+            bln4=mod_date_is_num(jData)
+            assert bln4
+            bln5=version_code(jData)
+            assert bln5
+            bln6=price(jData)
+            assert bln6
+            bln7=download_count(jData)
+            assert bln7
+            bln8=purchase(jData)
+            assert bln8
+
+            check_jData_app_name_package_name_version_name_cat_app_permit_signature(jData1,"showapp.log")#检查name，mime_type，通过打印显示不为空 
+            
+            
+            bln9=mod_date_is_num(jData1)
+            assert bln9
+            bln10=version_code(jData1)
+            assert bln10
+            bln11=price(jData1)
+            assert bln11
+            bln12=download_count(jData1)
+            assert bln12
+            bln13=purchase(jData1)
+            assert bln13
+            bln14=create_date(jData1)
+            assert bln14
+if __name__ == '__main__':
+    unittest.main()  

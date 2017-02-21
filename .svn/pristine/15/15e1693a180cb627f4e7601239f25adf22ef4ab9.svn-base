@@ -1,0 +1,26 @@
+#coding=utf-8  
+import requests
+import unittest
+import json
+import os
+import numbers
+import os,urllib2,urllib
+from config.reponse import response
+from utils.api_tools import *
+from check.api.special_points import *
+class testScreen_idDownload(unittest.TestCase):
+
+    def test1_cat_list_api(self):   
+             
+        cat_listId=get_category_id_list()
+        list_app_id,list_apk_id,list_icon_id,list_screen_id =get_app_apk_id_icon_id_screen_id(cat_listId)
+        print list_screen_id
+        fileSizelist,sizelist=file_download(list_screen_id)
+#         print fileSizelist,sizelist
+        self.assertEqual(fileSizelist,sizelist)
+                    
+                          
+                  
+        
+if __name__ == '__main__':
+    unittest.main()

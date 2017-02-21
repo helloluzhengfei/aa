@@ -1,0 +1,174 @@
+#!/usr/bin/env python
+# coding=utf-8
+#@author陆正飞
+#将log输出成文本内容
+#注意： 只有在level为error时才可调用log_error。该函数的好处是：会显示错误所在的程序以及行数。打印在控制台，不输出文档
+#其他需要打印到控制台但不需要输出文档的可调用log_print。
+#需要输出文档的调用log
+import sys
+import os
+import logging
+
+def log(level,msg,file_name):
+    """
+    Create log message
+    :param level: log level
+    :param msg: log message
+    :return:
+    """
+    
+    filename = os.path.split(sys._getframe().f_back.f_code.co_filename)[1]
+#     lineno = sys._getframe().f_back.f_lineno
+    
+    logger = logging.getLogger(filename)
+    logger.setLevel("WARNING")
+    
+    filepath='..\..\data\output\log\\' + file_name
+    
+    fh = logging.FileHandler(filepath)  
+    fh.setLevel("WARNING") 
+    
+
+    FORMAT='%(asctime)s - %(levelname)s-%(name)s-%(lineno)d- %(message)s'
+    log_format=logging.Formatter(FORMAT)
+    fh.setFormatter(log_format)
+    logger.addHandler(fh) 
+    print  filename
+#     print   lineno
+#     func = eval("logging.{0}".format(level.lower()))
+#     func("{0}[line:{1}] {2}".format(file_name, line_no, msg))
+
+    
+    if(level.lower()=='debug'):
+        logger.debug(msg)
+    elif(level.lower()=='critical') :
+        logger.critical(msg)
+    elif(level.lower()=='error') :
+        logger.error(msg)    
+    elif(level.lower()=='warning') :
+        logger.warning(msg)
+    elif(level.lower()=='info') :
+        logger.info(msg) 
+
+def log_error(level, msg):
+    """
+    Create log message
+    :param level: log level
+    :param msg: log message
+    :return:
+    """
+    
+    file_name = os.path.split(sys._getframe().f_back.f_code.co_filename)[1]
+    line_no = sys._getframe().f_back.f_lineno
+    func = eval("logging.{0}".format(level.lower()))
+    func("{0}[line:{1}] {2}".format(file_name, line_no, msg))
+
+def log_print(level, msg):  
+   
+    filename = os.path.split(sys._getframe().f_back.f_code.co_filename)[1]
+#    create logger
+    logger = logging.getLogger(filename)
+#     lineno = sys._getframe().f_back.f_lineno
+      
+    logger.setLevel(logging.DEBUG)
+      
+    # create console handler and set level to debug
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+  
+      
+    formatter = logging.Formatter('%(asctime)s -%(levelname)s- %(name)s - %(message)s')
+      
+    # add formatter to ch
+    ch.setFormatter(formatter)
+  
+# add ch to logger
+    logger.addHandler(ch)
+    if(level.lower()=='debug'):
+        logger.debug(msg)
+    elif(level.lower()=='critical') :
+        logger.critical(msg)
+    elif(level.lower()=='error') :
+        logger.error(msg)    
+    elif(level.lower()=='warning') :
+        logger.warning(msg)
+    elif(level.lower()=='info') :
+        logger.info(msg)
+    
+#     """
+#     Create log message
+#     :param level: log level
+#     :param msg: log message
+#     return:
+#      """
+#     
+#     logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.DEBUG)
+#     if(level.lower()=='debug'):
+#         logging.debug(msg)
+#     elif(level.lower()=='critical') :
+#         logging.critical(msg)
+#     elif(level.lower()=='error') :
+#         logging.error(msg)    
+#     elif(level.lower()=='warning') :
+#         logging.warning(msg)
+#     elif(level.lower()=='info') :
+#         logging.info(msg) 
+
+# def log():
+# LOG_FILE = 'tst.log'  
+# 
+# handler = logging.handlers.RotatingFileHandler(LOG_FILE, maxBytes = 1024*1024, backupCount = 5) # 实例化handler   
+# fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'  
+#   
+# formatter = logging.Formatter(fmt)   # 实例化formatter  
+# handler.setFormatter(formatter)      # 为handler添加formatter  
+#   
+# logger = logging.getLogger('tst')    # 获取名为tst的logger  
+# logger.addHandler(handler)           # 为logger添加handler  
+# logger.setLevel(logging.DEBUG)  
+#   
+# logger.info('first info message')  
+# logger.debug('first debug message') 
+
+# 
+# def log(level, msg):
+#     """
+#     Create log message
+#     :param level: log level
+#     :param msg: log message
+#     :return:
+#     """
+#     file_name = os.path.split(sys._getframe().f_back.f_code.co_filename)[1]
+#     line_no = sys._getframe().f_back.f_lineno
+# 
+#     func = eval("logging.{0}".format(level.lower()))
+#     func("{0}[line:{1}] {2}".format(file_name, line_no, msg))
+
+
+
+    
+        
+    
+ 
+  
+         
+#                  
+                          
+#     logging.debug(msg)
+#     logging.warning(msg)
+    
+# def log_app(level, msg):
+#     """
+#     Create log message
+#     :param level: log level
+#     :param msg: log message
+#     :return:
+#     """
+# #     logging.warning(msg)
+#     logging.basicConfig(filename='..\..\data\output\log\log_app.log', level=logging.DEBUG)
+#     logging.debug(msg)
+# 
+
+    
+    
+    

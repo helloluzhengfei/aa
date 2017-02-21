@@ -1,0 +1,40 @@
+#encoding=utf-8
+'''
+Created on 2017��2��8��
+
+@author: eric.chen
+'''
+
+import requests
+import json
+from utils.converter import byteify
+
+class WeatherInfoLocal(object):
+    '''
+    classdocs
+    '''
+
+
+    def __init__(self, cfg, loc, lang, unit):
+        '''
+        Constructor
+        '''
+        self.config = cfg
+        self.location = loc
+        self.language = lang
+        self.unit = unit
+        
+    def get_weather_instant(self):
+        url_weather_instant = "{0}{1}".format(self.config['api_host'], self.config['weather_instant'])
+        params = {'location': self.location}
+        resp = requests.get(url_weather_instant, params)
+        if(resp.status_code == 200):
+            #resp.encoding = "gbk"
+            #jsonResp = json.loads(resp._content)
+            #return jsonResp
+            resp.encoding = "utf-8"
+            
+            return byteify(resp.json())
+        else:
+            #logger
+            return {}

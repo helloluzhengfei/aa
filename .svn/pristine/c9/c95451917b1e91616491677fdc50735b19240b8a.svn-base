@@ -1,0 +1,408 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+#@author 陆正飞
+#api 单独部分检测逻辑代码
+from xmlrpclib import boolean
+from utils.logger import *
+from utils.converter import byteify
+from config.reponse import response
+ 
+def status_code(a): 
+    bln =not(boolean(a-200))
+    return bln
+def result_code(a): 
+    jResp = a.json()  
+    result_code = jResp["result_code"]
+    bln=not(boolean(result_code-200))           
+    return bln
+
+def limit_total(a): 
+    jResp = a.json() 
+    list_limit = jResp['limit']
+    cat_total=jResp["total"]   
+    bln=boolean(cat_total-list_limit>=0)           
+    return bln
+
+
+def Seq_num_in(a):
+    b=[] 
+    for i in range(0,200):
+        b.append(i)
+    for Seq_num in a:         
+        if Seq_num in b:
+            continue
+        else:
+            return False
+            break
+    return True
+
+def cat_listId_len(a,b):
+    lenth=len(a) 
+    bln=not(boolean(lenth-b))
+    return bln
+
+def check_jData_name_mime_type(a):   
+    cat_listName=[]   #name
+    cat_listMime_type=[]   
+    for jCat in a:                                 
+        cat_listName.append(jCat["name"])
+                           
+        cat_listMime_type.append(jCat['mime_type']) 
+           
+    return  cat_listName, cat_listMime_type                
+         
+  
+    
+def check_jData_app_name_package_name_version_name_cat_app_permit_signature(a,name):
+    app_name=[]
+    package_name=[]
+    version_name=[]
+    cat=[]
+    app_permit=[]
+    signature=[]
+    
+    for jCat in a:  
+        app_name.append(jCat['app_name'])  
+        package_name.append(jCat['package_name'])
+        version_name.append(jCat['version_name'])
+        cat.append(jCat['cat'])
+        app_permit.append(jCat['app_permit'])
+        signature.append(jCat['signature'])
+        
+    app_name_done=byteify(app_name)
+    log("debug", "app_name: %s" % app_name_done ,name)   
+     
+    package_name_done=byteify(package_name)  
+    log("debug", "package_name: %s" % package_name_done,name) 
+    
+    version_name_done=byteify(version_name)  
+    log("debug", "version_name: %s" % version_name_done,name )
+
+    cat_done=byteify(cat)  
+    log("debug", "cat: %s" % cat_done,name  )    
+    
+    app_permit_done=byteify(app_permit)  
+    log("debug", "app_permit: %s" % app_permit_done,name)          
+    
+    signature_done=byteify(signature)  
+    log("debug", "signature: %s" % signature_done,name )
+    
+def showapp_check_jData_app_name_package_name_version_name_cat_app_permit_signature(a,name):
+    app_name=[]
+    package_name=[]
+    version_name=[]
+    cat=[]
+    app_permit=[]
+    signature=[]
+    
+     
+    app_name.append(a['app_name'])  
+    package_name.append(a['package_name'])
+    version_name.append(a['version_name'])
+    cat.append(a['cat'])
+    app_permit.append(a['app_permit'])
+    signature.append(a['signature'])
+        
+    app_name_done=byteify(app_name)
+    log("debug", "app_name: %s" % app_name_done ,name)   
+     
+    package_name_done=byteify(package_name)  
+    log("debug", "package_name: %s" % package_name_done,name) 
+    
+    version_name_done=byteify(version_name)  
+    log("debug", "version_name: %s" % version_name_done,name )
+
+    cat_done=byteify(cat)  
+    log("debug", "cat: %s" % cat_done,name  )    
+    
+    app_permit_done=byteify(app_permit)  
+    log("debug", "app_permit: %s" % app_permit_done,name)          
+    
+    signature_done=byteify(signature)  
+    log("debug", "signature: %s" % signature_done,name )    
+
+def check_jData_app_name_package_name_version_name__app_desc_version_desc_app_permit_signature(a,name):
+    app_name=[]
+    package_name=[]
+    version_name=[]
+
+    app_desc=[]
+    version_desc=[]
+    app_permit=[]
+    signature=[]
+    
+    for jCat in a:  
+        app_name.append(jCat['app_name'])  
+        package_name.append(jCat['package_name'])
+        version_name.append(jCat['version_name'])
+        
+        app_desc.append(jCat['app_desc'])
+        version_desc.append(jCat['version_desc'])     
+        app_permit.append(jCat['app_permit'])
+        signature.append(jCat['signature'])
+        
+    app_name_done=byteify(app_name)
+    log("debug", "app_name: %s" % app_name_done ,name)   
+     
+    package_name_done=byteify(package_name)  
+    log("debug", "package_name: %s" % package_name_done,name) 
+    
+    version_name_done=byteify(version_name)  
+    log("debug", "version_name: %s" % version_name_done,name )
+
+    
+    app_desc_done=byteify(app_desc)  
+    log("debug", "app_desc: %s" % app_desc_done,name  )    
+    
+    app_permit_done=byteify(app_permit)  
+    log("debug", "app_permit: %s" % app_permit_done,name)          
+    
+    signature_done=byteify(signature)  
+    log("debug", "signature: %s" % signature_done,name ) 
+    
+            
+def check_jData_digest_size_mime_type_file_suffix(list_id):
+    
+    digest=[]  
+    size=[]   
+    mime_type=[]
+    file_suffix=[]
+    for file_id in list_id:
+        file_response=response().response_file_url(file_id)
+        jData=file_response.json()['data']        
+        digest.append(jData['digest'])
+        
+        size.append(jData['size']) 
+        mime_type.append(jData['mime_type'])
+        file_suffix.append(jData['file_suffix'])
+    return  digest,size,mime_type,file_suffix
+# 
+#     log("debug", "digest: %s" % digest )    
+#     log("debug", "size: %s" % size )
+#     log("debug", "mime_type: %s" % mime_type )
+#     log("debug", "file_suffix: %s" % file_suffix )
+     
+
+def print_log(a,b,c,d):
+    log("debug", "digest: %s" % a ,"file.log" )      
+    log("debug", "size: %s" % b ,"file.log")
+    log("debug", "mime_type: %s" % c,"file.log" )    
+    log("debug", "file_suffix: %s" % d,"file.log")
+              
+def seq_num(cat_listSeq_num):   
+    for Seq_num in cat_listSeq_num:             
+            a=type(Seq_num) 
+            if (a==int):
+                continue
+            else:
+                return False
+                break
+    return True
+
+def file_size(jData):
+    cat_listFile_size=[]    
+    for jCat in jData:
+            cat_listFile_size.append(jCat['file_size']) 
+            a=type(jCat['file_size']) 
+            if (a==int):
+                continue
+            else:
+                return False
+                break
+    return True
+
+def create_date(jData):
+    cat_list_create_date=[]    
+    for jCat in jData:        
+            cat_list_create_date.append(jCat['create_date'])
+            a=type(jCat['create_date']) 
+            if ((a==long)|(a==int)):
+                continue
+            else:
+                return False
+                break
+    return True
+
+def show_create_date(jData):
+    cat_list_create_date=[]              
+    cat_list_create_date.append(jData['create_date'])
+    a=type(jData['create_date']) 
+    if ((a==long)|(a==int)):
+        return True
+    else:
+        return False
+
+
+'''
+用于discusscomment
+'''
+def create_and_mod_date_discuss_comments(jData):
+            a=type(jData['create_date']) 
+            if (a==long):
+                return True
+            else:
+                return False
+                
+
+def mod_date_is_num(jData):
+    cat_list_mod_date=[]
+    
+    for jCat in jData:
+            cat_list_mod_date.append(jCat['mod_date'])       
+            a=type(jCat['mod_date']) 
+            if ((a==long)|(a==int)):
+                continue
+            else:
+                return False
+                break
+    return True
+
+def showapp_mod_date_is_num(jData):
+    cat_list_mod_date=[]   
+    cat_list_mod_date.append(jData['mod_date'])       
+    a=type(jData['mod_date']) 
+    if ((a==long)|(a==int)):
+        return True
+    else:
+        return False
+
+
+
+
+def version_code(jData):
+    version_code_list=[]
+    for jCat in jData:
+        
+        version_code_list.append(jCat['version_code'])
+        a=type(jCat['version_code']) 
+        if (a==int):          
+            continue
+        else:
+            return False
+            break
+    return True
+
+def showapp_version_code(jData):
+    version_code_list=[]       
+    version_code_list.append(jData['version_code'])
+    a=type(jData['version_code']) 
+    if (a==int):          
+        return True
+    else:
+        return False
+            
+    
+
+def price(jData):
+    price_list=[]
+    for jCat in jData:
+        
+        price_list.append(jCat['price'])
+        a=type(jCat['price'])
+          
+        if (a==float):          
+            continue
+        else:
+            return False
+            break
+    return True
+
+def showapp_price(jData):
+    price_list=[]        
+    price_list.append(jData['price'])
+    a=type(jData['price'])
+      
+    if (a==float):          
+        return True
+    else:
+        return False
+
+    
+
+def download_count(jData):
+    download_count_list=[]
+    for jCat in jData:
+        
+        download_count_list.append(jCat['download_count'])
+        a=type(jCat['download_count']) 
+        if (a==int):          
+            continue
+        else:
+            return False
+            break
+    return True
+
+def showapp_download_count(jData):
+    download_count_list=[]       
+    download_count_list.append(jData['download_count'])
+    a=type(jData['download_count']) 
+    if (a==int):          
+        return True
+    else:
+        return False
+            
+    
+
+def purchase(jData):
+    purchase_list=[]
+    for jCat in jData:
+        
+        purchase_list.append(jCat['purchase'])
+        a=type(jCat['purchase']) 
+        if (a==bool):          
+            continue
+        else:
+            return False
+            break
+    return True
+
+def showapp_purchase(jData):
+    purchase_list=[]       
+    purchase_list.append(jData['purchase'])
+    a=type(jData['purchase']) 
+    if (a==bool):          
+        return True
+    else:
+        return False
+          
+    
+
+def show_msg_star_log(jData):
+    msg_list=[]
+    star_list=[]
+    for jCat in jData:        
+            msg_list.append(jCat['msg'])
+            star_list.append(jCat['stars'])
+            log("debug", "msg: %s" % jCat['msg'] ,"comments.log")       
+            log("debug", "stars: %s" % jCat['stars'] ,"comments.log")
+    
+# def parentid_in_catlist_id(cat_listId ,cat_listParent_idRemSm):
+# 
+#             
+#         for Parent_idRemSm in cat_listParent_idRemSm:
+#             if Parent_idRemSm in cat_listParent_idRemSm:
+#                 continue
+#             else:
+#                 return False
+#                 break            
+#         return True
+
+'''
+@author: 陆正飞
+比较读取的excel数据与api中是一致
+'''
+   
+def stars_msg(jData,stars,msg):   
+    jData_msg=jData['msg']
+    print jData_msg
+    
+    jData_stars=jData['stars']
+    print jData_stars  
+    
+    if((jData_msg==msg)&(jData_stars==stars)):
+        return True
+    else:
+        return False
+        
+

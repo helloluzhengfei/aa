@@ -1,0 +1,32 @@
+#coding=utf-8
+'''
+Created on 2017年2月8日
+
+@author: eric.chen
+'''
+import os
+import logging
+import logging.handlers
+
+LOG_FILE_NAME = 'SqeTester.log'
+MAX_BYTES = 1024*1024*10
+
+class Logger(object):
+    '''
+    classdocs
+    '''
+
+    def __init__(self):
+        '''
+        Constructor
+        '''
+        filepath = "{0}/{1}".format(os.path.abspath('..'), LOG_FILE_NAME)
+        self.handler = logging.handlers.RotatingFileHandler(filepath, MAX_BYTES, backupCount=5)
+        fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
+        formator = logging.Formatter(fmt)
+        self.handler.setFormatter(formator)
+        self.logger = logging.getLogger('SqeTester')
+        self.logger.addHandler(self.handler)
+        self.logger.setLevel(logging.DEBUG)
+        self.logger.info('Log file created!')
+        

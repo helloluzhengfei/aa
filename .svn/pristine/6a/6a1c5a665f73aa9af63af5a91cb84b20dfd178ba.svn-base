@@ -1,0 +1,36 @@
+# coding=utf-8
+from time import sleep
+
+from check_points.web.check_app_category_add_point import check_select_parent_category
+from check_points.web.check_app_category_add_point import check_category_name
+from check_points.web.check_app_category_add_point import check_category_order
+from check_points.web.check_app_category_add_point import check_select_file
+from check_points.web.check_app_category_add_point import check_save
+from check_points.web.check_app_category_add_point import check_list_item_total
+
+def check_app_category_add_item(driver,cat_name,category_name,category_order,file_url):
+    list_item_total_before = check_list_item_total(driver)  
+    
+    driver.current_window_handle    
+    driver.find_element_by_link_text("添加分类").click()
+    
+    rst1 = check_select_parent_category(driver,category_name)
+    rst2 = check_category_name(driver,cat_name)
+    rst3 = check_category_order(driver,category_order)
+    rst4 = check_select_file(driver,file_url)
+    
+    driver.find_element_by_id('savebtn').click()
+    sleep(1)
+    driver.current_window_handle 
+      
+    list_item_total_after = check_list_item_total(driver)   
+    list_item_sub = list_item_total_after - list_item_total_before
+    rst5 = check_save(driver,list_item_sub)
+    sleep(1)
+    
+    rests = [rst1, rst2, rst3, rst4, rst5]
+    result =True
+    for rst in rests:
+        result = result and rst
+        
+    return rst

@@ -1,0 +1,152 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+#@author 陆正飞
+#api 得到需要用到的list
+from config.reponse import response
+import os
+from utils.converter import byteify
+def cat_listId_list(jData):
+        cat_listId = [] 
+        
+        for jCat in jData:
+            cat_listId.append(jCat['id'])
+        return  cat_listId 
+            
+def get_seq_num_list(jData):
+    cat_listSeq_num=[]
+    for jCat in jData:
+            cat_listSeq_num.append(jCat['seq_num'])              
+      
+    return  cat_listSeq_num   
+
+def get_name_list(jData):
+    cat_list_name=[]
+    for jCat in jData:
+            cat_list_name.append(jCat['name'])              
+      
+    return  cat_list_name 
+
+def get_app_id_list_one(jData):
+    app_id_list=[]
+    for appData in jData:
+            app_id_list.append(appData['id'])              
+      
+    return  app_id_list
+
+def get_app_apk_id_icon_id_screen_id(cat_listId):
+    list_app_id=[]
+    list_apk_id=[]
+    list_icon_id=[]
+    list_screen_id=[]
+    for cat_id in cat_listId:
+        jData=response(). response_category_url_jData(cat_id)
+        for appData in jData:                            
+                list_app_id.append(appData['id'])               
+                list_apk_id.append(appData['apk_id'])
+                list_icon_id.append(appData['icon_id'])
+                list_screen_id.extend(appData['screen_id'])
+    return    list_app_id,list_apk_id,list_icon_id,list_screen_id     
+
+def get_category_id_list():
+
+    jData=response().response_catlist_url_jData()            
+    cat_listId=parentid_rm(jData)   
+
+    return cat_listId
+
+
+# '''
+# app测试中的公共部分需要用到
+# '''
+# def get_appName_appDesc_appPrice(cat_listId,appName,catName,appPrice):
+#     app_name_list=[]
+#     catName_list=[]
+#     price_list=[]
+#     for category_id in cat_listId:  
+#         jData = response().response_catlist_url_jData(category_id)
+#         for jCat in jData:
+#             app_name_list.append(jCat['app_name'])
+#             if((catName==jCat['app_name'])&(catName==jCat['cat'])&(appPrice==jCat['price'])):
+#                 return True
+#             else:
+#                 continue 
+#     return False        
+
+         
+def parentid_rm(jData):
+        cat_listId = [] 
+        cat_listParent_id=[]
+        for jCat in jData:
+            cat_listId.append(jCat['id']) 
+            cat_listParent_id.append(jCat['parent_id'])      
+        cat_listId.append(u'0')      
+        
+    #判断        Parent_id是否包含在listId中
+        cat_listParent_idRemSm = list(set(cat_listParent_id))
+        for parent_Id in cat_listParent_idRemSm:
+            cat_listId.remove(parent_Id)
+        cat_listId.remove(u'0000-a98a93dc-d0e6-4731-af48-4da84e15cdce')
+        return  cat_listId
+    
+    
+def file_download(apk_id_icon_id_screen_id):
+    fileSizelist=[]
+    sizelist=[]
+
+    for local_filename in apk_id_icon_id_screen_id:
+                stored_filename=local_filename
+#                 stored_filename += "." + ".apk"   
+                print "#####################File will be saved as: "+stored_filename
+                
+                apk_response=response().response_download_apk(local_filename)
+                if apk_response.status_code == 200:
+                    path= '../../data/output/apk_download'    
+                     
+                    dest_dir=os.path.join(path,stored_filename)
+#                     print dest_dir
+        
+                    open(dest_dir, 'wb').write(apk_response.content)
+        #             #得出下载文件的大小
+                    fileSize =int( os.path.getsize(dest_dir))
+                    fileSizelist.append(fileSize)
+                    file_response=response().response_file_url(local_filename) 
+                    jData = file_response.json()['data']
+                    size=jData['size']
+                    sizelist.append(size)                    
+    return   fileSizelist,sizelist   
+
+
+'''
+@author 陆正飞
+输入用户名，得出该用户名的id 以及parent_id
+
+'''
+def get_id_parentid_by_name(name):
+#     name_list=[]
+#     id_list=[]
+#     parent_list=[]
+    jData = response().response_catlist_url_jData()
+    for jCat in jData:
+#         name_list.append(jCat['name'])
+#         print jCat['name']
+#         id_list.append(jCat['id'])
+#         parent_list.append(jCat['parent_id'])
+        if(name==jCat['name'].encode('utf-8')):
+            
+            return jCat['id'],jCat['parent_id']
+            
+    
+
+#     print type(name1)
+#     a=name_list.index(name1)
+#     print  a
+#     get_id=id_list[index]
+#     parent_id=parent_list[index]
+#     return  get_id,parent_id
+#     print get_id,parent_id
+#     
+#     print  id_list
+#     print parent_list
+        
+                                    

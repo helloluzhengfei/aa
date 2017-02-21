@@ -1,0 +1,38 @@
+#coding=GBK
+import requests
+import unittest
+import json
+import os
+import numbers
+import re
+from config.reponse import response
+from utils.api_tools import *
+from check.api.special_points import *
+class testFileInfo(unittest.TestCase):
+
+    def test1_cat_list_api(self):
+        cat_listId=get_category_id_list()
+        print cat_listId
+        list_app_id,list_apk_id,list_icon_id,list_screen_id =get_app_apk_id_icon_id_screen_id(cat_listId)
+        listall=list_apk_id+list_icon_id+list_screen_id
+        print listall
+        for file_id in listall:
+            file_response=response().response_file_url(file_id)
+            bln1=status_code(file_response.status_code)  
+            self.assertTrue(bln1)                   
+            bln2=result_code(file_response)
+            self.assertTrue(bln2) 
+ 
+        digest,size,mime_type,file_suffix=check_jData_digest_size_mime_type_file_suffix(listall)
+        log("WARNING", "digest: %s" % digest,'file.log')
+        log("WARNING", "size: %s" % size,'file.log')
+        log("WARNING", "mime_type: %s" % mime_type,'file.log')
+        log("WARNING", "file_suffix: %s" % file_suffix,'file.log')
+        
+
+        
+if __name__ == '__main__':
+    unittest.main()        
+
+  
+   

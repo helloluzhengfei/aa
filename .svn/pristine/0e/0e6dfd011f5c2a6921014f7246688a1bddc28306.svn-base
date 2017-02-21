@@ -1,0 +1,76 @@
+#coding=GBK
+#@author 陆正飞
+#业务代码 check
+import unittest
+from check_points.api.staus_code import *
+from config.reponse import response
+from utils.readexcel import readexcel
+from check_points.api.check_common_points import check_common_points
+class testCatlist(unittest.TestCase):
+    def setUp(self):      
+        self.cat_listId = []   #data
+        self.cat_len = 0;        
+        self.cat_listSeq_num=[]   #seq_num       
+        self.cat_listParent_id=[]    #parent_id          
+        
+    #第一次测试   10.110.1.55:8081/1.0/cat/list/cat/list
+
+    def parentid_rm(self, jData):
+        for jCat in jData:
+            self.cat_listId.append(jCat['id']) #0000-3b85e060-14ab-4f2a-a5f3-16cec8ebf9a9
+            self.cat_listParent_id.append(jCat['parent_id'])
+        
+    #此处放在data中的内容
+        self.cat_listId.append(u'0')
+    #判断        Parent_id是否包含在listId中
+        self.cat_listParent_idRemSm = list(set(self.cat_listParent_id))
+        for Parent_idRemSm in self.cat_listParent_idRemSm:
+            self.assertIn(Parent_idRemSm, self.cat_listId) #'Parent_id在Id内'
+
+    def test1_cat_list_api(self):
+        
+        b=readexcel()  
+ 
+        response_obj = response().response_catlist_url()
+        
+        bln1=status_code(response_obj.status_code)  
+        assert bln1                   
+        bln2=result_code(response_obj)
+        assert bln2
+        
+        jResp = response_obj.json()  ###################
+        
+        bln3=limit_total(response_obj)
+        assert bln3
+
+        jData = jResp["data"]
+#把data中的id部分依次遍历，放入到self.cat_list中
+        check_jData_name_mime_type(jData)#检查name，mime_type，通过打印显示不为空 
+        
+#检查excel表格与网上爬取数据是否一致
+        i=0           
+        bln=check_common_points(jData,b,i)
+        assert bln
+        
+        bln6=seq_num(jData)
+        assert bln6
+        bln7=file_size(jData)
+        assert bln7
+        bln8=create_date(jData)
+        assert bln8
+        bln9=mod_date_is_num(jData)
+        assert bln9
+        
+        self.parentid_rm(jData)
+         
+        bln4=Seq_num_in(self.cat_listSeq_num)  #判断Seq_num是否在0-200内
+        assert bln4
+         
+        list_limit = jResp['limit']
+        bln5=cat_listId_len(self.cat_listId,list_limit)
+        assert bln5
+
+        print u'第一次检查完美结束'
+        
+        
+    

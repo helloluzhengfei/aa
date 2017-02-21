@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+# coding=utf-8
+#@author陆正飞
+#将log输出成文本内容
+
+import sys
+import os
+import logging
+
+
+def log(level, msg):
+    """
+    Create log message
+    :param level: log level
+    :param msg: log message
+    :return:
+    """
+#     logging.warning(msg)
+    logging.basicConfig(filename='..\..\data\output\catlist.log', level=logging.DEBUG)
+    logging.debug(msg)
+    
+def log_app(level, msg):
+    """
+    Create log message
+    :param level: log level
+    :param msg: log message
+    :return:
+    """
+#     logging.warning(msg)
+    logging.basicConfig(filename='..\..\data\output\log_app.log', level=logging.DEBUG)
+    logging.debug(msg)
+
+def log_file(level, msg):
+    """
+    Create log message
+    :param level: log level
+    :param msg: log message
+    :return:
+    """
+#     logging.warning(msg)
+    logging.basicConfig(filename='..\..\data\output\log_file.log', level=logging.DEBUG)
+    logging.debug(msg)

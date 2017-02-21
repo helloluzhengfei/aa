@@ -1,0 +1,6 @@
+# coding=utf-8
+import os
+
+class FileDir:    
+    base_dir = os.path.abspath(__file__).split('\\utils\\')[0]
+    app_excel_dir = base_dir + '\\data\\app_data\\appStoreApps.xls'

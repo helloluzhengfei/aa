@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+# coding=utf-8
+#@author陆正飞
+
+
+import sys
+import os
+import logging
+
+
+def log(lvl, msg):
+    """
+    Create log message
+    :param level: log level
+    :param msg: log message
+    :return:
+    """
+#     logging.warning(msg)
+    logging.basicConfig(filename='D:\example.log', level=logging.DEBUG)
+    logging.debug(msg)
+

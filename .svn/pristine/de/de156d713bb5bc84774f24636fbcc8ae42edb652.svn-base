@@ -1,0 +1,52 @@
+#coding=GBK  
+import requests
+import unittest
+import json
+import os
+import numbers
+from ctypes.test.test_numbers import bool_types
+import string
+import re
+from config.reponse import response
+from check.api.special_points import *
+from utils.api_tools import *
+class testApp(unittest.TestCase):                    
+    def test_get_app_info(self):       
+        cat_listId=get_category_id_list()
+        for category_id in cat_listId:
+            
+            response_obj1 = response().response_category_url(category_id)
+            
+            bln1=status_code(response_obj1.status_code)  
+            assert bln1                   
+            bln2=result_code(response_obj1)
+            assert bln2
+        
+            jResp = response_obj1.json()
+            
+            bln3=limit_total(response_obj1)
+            assert bln3
+           
+            jData = jResp["data"]
+            
+            check_jData_app_name_package_name_version_name_cat_app_permit_signature(jData)#检查name，mime_type，通过打印显示不为空 
+            
+            bln8=create_date(jData)
+            assert bln8
+            bln9=mod_date_is_num(jData)
+            assert bln9
+            bln10=version_code(jData)
+            assert bln10
+            bln11=price(jData)
+            assert bln11
+            bln12=download_count(jData)
+            assert bln12
+            bln13=purchase(jData)
+            assert bln13
+            
+            list_limit = jResp['limit']
+            app_id_list=get_app_id_list_one(jData)
+            bln5=cat_listId_len(app_id_list,list_limit)
+            self.assertTrue(bln5) 
+if __name__ == '__main__':
+    unittest.main()    

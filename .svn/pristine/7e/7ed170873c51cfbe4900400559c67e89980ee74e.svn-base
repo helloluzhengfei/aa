@@ -1,0 +1,54 @@
+#coding=utf-8 
+import requests
+import unittest
+import json
+import os
+import numbers
+from ctypes.test.test_numbers import bool_types
+import string
+import re
+from config.reponse import response
+from check.api.special_points import *
+from utils.api_tools import *
+class testAppIfUpdate(unittest.TestCase):
+    def test1_cat_list_api(self):
+        cat_listId=get_category_id_list()
+        package_name_list, version_code_list=get_package_name_version_code_list(cat_listId)
+        
+        for i in range(len(package_name_list)):
+            response_obj=response().response_appifupdate(i,package_name_list,version_code_list)
+              
+            bln1=status_code(response_obj.status_code)  
+            assert bln1                   
+            bln2=result_code(response_obj)
+            assert bln2
+            
+            jResp = response_obj.json() 
+            bln3=limit_total(response_obj)
+            self.assertTrue(bln3)
+
+        
+            jData = jResp["data"] 
+              
+    
+#             for jCat in jData:
+                
+            check_jData_app_name_package_name_version_name__app_desc_version_desc_app_permit_signature(jData,"appupdate.log") 
+             
+            bln8=create_date(jData)
+            assert bln8
+            bln9=mod_date_is_num(jData)
+            assert bln9
+            bln10=version_code(jData)
+            assert bln10
+            bln11=file_size(jData)
+            assert bln11
+            bln12=download_count(jData)
+            assert bln12
+            bln13=purchase(jData)
+            assert bln13
+            bln13=purchase(jData)
+            assert bln13
+                
+if __name__ == '__main__':
+    unittest.main()                        

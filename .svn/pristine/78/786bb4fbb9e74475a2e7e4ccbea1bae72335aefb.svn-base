@@ -1,0 +1,42 @@
+# coding=utf-8
+
+from selenium import webdriver
+import unittest
+from utils.readexcel import readexcel
+from utils.file_dir import FileDir
+
+from check.api.sqe_name_points import sqe_name_points
+from utils.app_category_page import AppCategory
+from check.web.check_app_category_add_point import check_app_category_add_item
+from config.reponse import response
+
+class TestAppCategory(AppCategory):
+    def test_web_app_cat_add(self):
+        dir_obj = FileDir()
+        driver = self.driver
+        
+        excel_info = readexcel()
+        
+        #for excel_row in range(0,excel_info.__len__()):
+        for excel_row in range(0,2):
+            print('test %r row in excel'%excel_row) 
+        
+            #check web
+            cat_name = excel_info[excel_row].get('catName')
+            category_name = excel_info[excel_row].get('catList')   
+            category_order = int (excel_info[excel_row].get('catSeqNum'))    
+            file_dir = dir_obj.base_dir +'\\' + excel_info[excel_row].get('catImgPath')            
+            web_rst = check_app_category_add_item(driver,cat_name,category_name,str(category_order),file_dir)            
+            
+            self.assertTrue(web_rst)
+            
+            #if web check result is ok , then check api
+            if(web_rst):                                         
+                #检查web已添加的excel数据是否与api侧获取的数据相同                        
+                api_rst = sqe_name_points(cat_name,category_order) 
+                self.assertTrue(api_rst) 
+                         
+                             
+
+if __name__ == '__main__':
+    unittest.main()

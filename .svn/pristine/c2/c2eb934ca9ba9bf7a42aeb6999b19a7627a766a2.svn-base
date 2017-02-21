@@ -1,0 +1,45 @@
+#coding=utf-8 
+'''
+@author: 陆正飞
+读取excel表的评论，加载到各个地址中。在将excel的comments与star与api 的进行比较，查看是否相等
+'''
+ 
+import requests
+import unittest
+import json
+import os
+import numbers
+import os,urllib2,urllib
+from config.reponse import response
+from utils.api_tools import *
+from check.api.special_points import *
+from utils.readexcel import readexcel
+class testDiscussComment(unittest.TestCase):
+
+    def test1_cat_list_api(self):
+        cat_listId=get_category_id_list()
+        list_app_id,list_apk_id,list_icon_id,list_screen_id =get_app_apk_id_icon_id_screen_id(cat_listId)
+        print list_app_id
+        for app_id in list_app_id:
+            excel_info = readexcel("app_comments")
+            print excel_info
+            for excel_row in range(0,excel_info.__len__()):
+                
+                print('test %r row in excel'%excel_row)         
+                #check web
+                stars = excel_info[excel_row].get('star')
+                msg = excel_info[excel_row].get('comments') 
+                  
+                response_obj=response().response_discuss_comment(app_id,stars,msg)
+                bln1=status_code(response_obj.status_code)  
+                self.assertTrue(bln1)
+                bln2=result_code(response_obj)
+                self.assertTrue(bln2)
+                
+                jData=response_obj.json()["data"]
+                bln3=stars_msg(jData,stars,msg)
+                self.assertTrue(bln3)
+                
+ 
+if __name__ == '__main__':
+    unittest.main()     

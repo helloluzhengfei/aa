@@ -1,0 +1,128 @@
+from xmlrpclib import boolean
+ 
+def status_code(a): 
+    bln =not(boolean(a-200))
+    return bln
+def result_code(a): 
+    jResp = a.json()  
+    result_code = jResp["result_code"]
+    bln=not(boolean(result_code-200))           
+    return bln
+
+def limit_total(a): 
+    jResp = a.json() 
+    list_limit = jResp['limit']
+    cat_total=jResp["total"]   
+    bln=boolean(cat_total-list_limit>=0)           
+    return bln
+
+
+def Seq_num_in(a):
+    b=[] 
+    for i in range(0,200):
+        b.append(i)
+    for Seq_num in a:         
+        if Seq_num in b:
+            continue
+        else:
+            return False
+            break
+    return True
+
+def cat_listId_len(a,b):
+    lenth=len(a)-1 
+    bln=not(boolean(lenth-b))
+    return bln
+
+def check_jData_name_mime_type(a):   
+    cat_listId = []   #data
+    cat_len = 0;
+    cat_listName=[]   #name
+    cat_listSeq_num=[]   #seq_num
+    cat_listFile_size=[]   #file_size
+    cat_listMime_type=[]   #mime_type
+    cat_listParent_id=[]    #parent_id
+    cat_listMime_type=[]   
+    app_Id=[]
+    cat_list_create_date=[]
+    cat_list_mod_date=[]
+    for jCat in a:                                 
+        cat_listName.append(jCat["name"])                   
+        cat_listMime_type.append(jCat['mime_type'])                  
+            
+    print '[Name]' 
+    print cat_listName      
+    print '[Mime_type]'   
+    print cat_listMime_type    
+    
+def seq_num(jData):
+    cat_listSeq_num=[]
+    cat_listFile_size=[] 
+    cat_list_create_date=[]
+    cat_list_mod_date=[]
+    
+    for jCat in jData:
+            cat_listSeq_num.append(jCat['seq_num'])   
+            a=type(jCat['seq_num']) 
+            if (a==int):
+                continue
+            else:
+                return False
+                break
+    return True
+
+def file_size(jData):
+    cat_listSeq_num=[]
+    cat_listFile_size=[] 
+    cat_list_create_date=[]
+    cat_list_mod_date=[]
+    
+    for jCat in jData:
+            cat_listFile_size.append(jCat['file_size']) 
+            a=type(jCat['file_size']) 
+            if (a==int):
+                continue
+            else:
+                return False
+                break
+    return True
+
+def create_date(jData):
+    cat_listSeq_num=[]
+    cat_listFile_size=[] 
+    cat_list_create_date=[]
+    cat_list_mod_date=[]
+    
+    for jCat in jData:
+            cat_list_create_date.append(jCat['create_date'])
+            a=type(jCat['create_date']) 
+            if (a==long):
+                continue
+            else:
+                return False
+                break
+    return True
+
+def mod_date_is_num(jData):
+    cat_listSeq_num=[]
+    cat_listFile_size=[] 
+    cat_list_create_date=[]
+    cat_list_mod_date=[]
+    
+    for jCat in jData:
+            cat_list_mod_date.append(jCat['mod_date'])       
+            a=type(jCat['mod_date']) 
+            if (a==long):
+                continue
+            else:
+                return False
+                break
+    return True
+            
+
+                
+      
+            
+       
+    
+

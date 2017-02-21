@@ -1,0 +1,16 @@
+#encoding=utf-8
+'''
+Created on 2017年2月9日
+
+@author: eric.chen
+'''
+
+def byteify(input):
+    if isinstance(input, dict):
+        return {byteify(key):byteify(value) for key,value in input.iteritems()}
+    elif isinstance(input, list):
+        return str([byteify(element) for element in input]).decode('string_escape')    
+    elif isinstance(input, unicode):
+        return input.encode('utf-8')
+    else:
+        return input

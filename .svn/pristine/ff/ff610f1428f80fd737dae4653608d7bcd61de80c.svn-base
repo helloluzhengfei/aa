@@ -1,0 +1,9 @@
+# coding=utf-8
+
+class AppStoreUrl:
+    login_url = 'http://10.110.1.55:8082/admin/home.html'
+    main_page_url = 'http://10.110.1.55:8082/admin/home.html'
+    wait_check_page_url = 'http://10.110.1.55:8082/admin/apkpendinglist.html'
+    add_app_url = 'http://10.110.1.55:8082/admin/apkpublish.html'
+    category_add_page_url = 'http://10.110.1.55:8082/admin/catnew.html'
+    category_page_url = r'http://10.110.1.55:8082/admin/catlist.html'

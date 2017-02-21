@@ -1,0 +1,96 @@
+#coding=utf-8
+'''
+Created on 2017骞�2鏈�8鏃�
+
+@author: eric.chen
+'''
+import os
+import ConfigParser
+import logging
+from utils.system_info import isOSWindows
+
+def load_config(app_type, config_type):
+    config1 = {}
+    config2 = {}
+    cp = ConfigParser.ConfigParser()
+    root_dir = os.path.abspath('.') #be careful for the path
+    
+    isWindows = isOSWindows()
+    if config_type == 'dev':
+        if isWindows:
+            config_path = '{0}\\config\\{1}\\config_dev.ini'.format(root_dir, app_type)
+        else:
+            config_path = '{0}/config/{1}/config_dev.ini'.format(root_dir, app_type)
+    elif config_type == 'test':
+        if isWindows:
+            config_path = '{0}\\config\\{1}\\config_test.ini'.format(root_dir, app_type)
+        else:
+            config_path = '{0}/config/{1}/config_test.ini'.format(root_dir, app_type)
+    elif config_type == 'staging':
+        if isWindows:
+            config_path = '{0}\\config\\{1}\\config_staging.ini'.format(root_dir, app_type)
+        else:
+            config_path = '{0}/config/{1}/config_staging.ini'.format(root_dir, app_type)
+    elif config_type == 'prod':
+        if isWindows:
+            config_path = '{0}\\config\\{1}\\config_prod.ini'.format(root_dir, app_type)
+        else:
+            config_path = '{0}/config/{1}/config_prod.ini'.format(root_dir, app_type)
+    else:
+        if isWindows:
+            config_path = '{0}\\config\\{1}\\config.ini'.format(root_dir, app_type)
+        else:
+            config_path = '{0}/config/{1}/config.ini'.format(root_dir, app_type)
+    
+    logger = logging.getLogger('SqeTester')
+    logger.info(config_path)
+    
+    cp.read(config_path)
+    config1['api_host'] = cp.get('api', 'api_host')
+    config1['weather_instant'] = cp.get('url', 'weather_instant')
+    config1['weather_daily'] = cp.get('url', 'weather_daily')
+    config1['weather_hourly'] = cp.get('url', 'weather_hourly')
+    config1['weather_hourly_history'] = cp.get('url', 'weather_hourly_history')
+    config1['weather_alarm'] = cp.get('url', 'weather_alarm')
+    config1['air_quality_instant'] = cp.get('url', 'air_quality_instant')
+    config1['air_quality_rank'] = cp.get('url', 'air_quality_rank')
+    config1['air_quality_daily'] = cp.get('url', 'air_quality_daily')
+    config1['air_quality_hourly'] = cp.get('url', 'air_quality_hourly')
+    config1['air_quality_hourly_history'] = cp.get('url', 'air_quality_hourly_history')
+    config1['life_suggestion'] = cp.get('url', 'life_suggestion')
+    config1['life_chinese_calendar'] = cp.get('url', 'life_chinese_calendar')
+    config1['life_driving_restriction'] = cp.get('url', 'life_driving_restriction')
+    config1['geo_sun'] = cp.get('url', 'geo_sun')
+    config1['geo_moon'] = cp.get('url', 'geo_moon')
+    config1['location_search'] = cp.get('url', 'location_search')
+    config1['city'] = cp.get('input', 'city')
+    config1['lang'] = cp.get('input', 'lang')
+    config1['unit'] = cp.get('input', 'unit')
+    config1['start'] = cp.get('input', 'start')
+    config1['days'] = cp.get('input', 'days')
+    config1['hour_start'] = cp.get('input', 'hour_start')
+    config1['hours'] = cp.get('input', 'hours')
+    config1['scope'] = cp.get('input', 'scope')
+    
+    config2['api_host'] = cp.get('thinkpage', 'api_host')
+    config2['key'] = cp.get('thinkpage', 'key')
+    config2['version'] = cp.get('thinkpage', 'version')
+    config2['weather_instant'] = cp.get('thinkpage', 'weather_instant')
+    config2['weather_instant'] = cp.get('thinkpage', 'weather_instant')
+    config2['weather_daily'] = cp.get('thinkpage', 'weather_daily')
+    config2['weather_hourly'] = cp.get('thinkpage', 'weather_hourly')
+    config2['weather_hourly_history'] = cp.get('thinkpage', 'weather_hourly_history')
+    config2['weather_alarm'] = cp.get('thinkpage', 'weather_alarm')
+    config2['air_quality_instant'] = cp.get('thinkpage', 'air_quality_instant')
+    config2['air_quality_rank'] = cp.get('thinkpage', 'air_quality_rank')
+    config2['air_quality_daily'] = cp.get('thinkpage', 'air_quality_daily')
+    config2['air_quality_hourly'] = cp.get('thinkpage', 'air_quality_hourly')
+    config2['air_quality_hourly_history'] = cp.get('thinkpage', 'air_quality_hourly_history')
+    config2['life_suggestion'] = cp.get('thinkpage', 'life_suggestion')
+    config2['life_chinese_calendar'] = cp.get('thinkpage', 'life_chinese_calendar')
+    config2['life_driving_restriction'] = cp.get('thinkpage', 'life_driving_restriction')
+    config2['geo_sun'] = cp.get('thinkpage', 'geo_sun')
+    config2['geo_moon'] = cp.get('thinkpage', 'geo_moon')
+    config2['location_search'] = cp.get('thinkpage', 'location_search')
+    
+    return config1, config2

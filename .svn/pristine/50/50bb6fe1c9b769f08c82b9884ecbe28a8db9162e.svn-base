@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+#@author 陆正飞
+#访问域名代码
+import requests
+class response():
+    def __init__(self):
+        self.base_url = 'http://10.110.1.55:8081/1.0/'
+        self.cat_list_uri = 'cat/list'
+        self.cat_app_uri = 'cat/app/'
+        self.file_prop_uri = 'file/'
+        self.dlwd_icon_uri = 'app/icon/cont/'
+        self.dlwd_screen_uri = 'app/screen/cont/'
+        self.dlwd_apk_uri = 'app/cont/'
+        self.comment_add_uri = 'app/c/' #  POST /app/c/{app_id}
+        self.comment_get_uri = 'app/screen/cont/' #GET app/c/list/{app_id}?pos={pos}&limit={limit}
+    
+    def response_catlist_url(self): 
+        catlist_url = self.base_url + self.cat_list_uri
+        catlist_response =requests.get(catlist_url)
+        return catlist_response
+     
+    def response_category_url(self,category_id):    
+        category_url = self.base_url + self.cat_app_uri+category_id          
+    
